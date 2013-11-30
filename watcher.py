@@ -36,7 +36,6 @@ def test():
 
 def test_animation():
     d = date(2013,11,17)
-
     t = time(8,36)
     start = datetime.combine(d,t)
     now = start

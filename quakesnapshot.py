@@ -1,4 +1,7 @@
 import numpy
+import os, os.path
+from PIL import Image
+
 class QuakeSnapshot:
     path = None
     time = None
@@ -30,7 +33,6 @@ class QuakeSnapshot:
             urllib.urlretrieve(url, savepath)
             print "retrieved ",savepath
 
-        #if not self.image:
-        #    savepath = self._get_savepath()
-        #    self.image = Image.open( savepath )
-
+        if not self.image:
+            savepath = self._get_savepath()
+            self.image = Image.open( savepath )
