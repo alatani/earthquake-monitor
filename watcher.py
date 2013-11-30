@@ -8,50 +8,40 @@ import os, os.path
 
 import animation#
 
+#coding: utf-8
+from quakesnapshot import QuakeSnapshot
 
-class QuakeSnapshot:
-    path = None
-    time = None
-    image = None
+def watch(tasks,interval_sec=2):
+    lastupdate = datetime.datetime(2000,1,1)
+    sec = datetime.timedelta(seconds=interval_sec)
+    while True:
+        now = datetime.datetime.now()
+        dt = now-lastupdate
+        if dt > sec:
+            try:
+                lastupdate = now
+                snapshot = QuakeSnapshot(now)
 
-    base_dir = "./snapshot"
-    def __init__(self,time):
-        self.time = time
+                #apply snapshot to all tasks
+                for task in tasks:
+                    task(snapshot)
 
-        self.retrieve_image()
-
-    def get_url(self):
-        base_url = "http://realtime-earthquake-monitor.bosai.go.jp/realtimeimage/acmap_s/%s.acmap_s.gif"
-        return base_url % self.time.strftime("%Y%m%d%H%M%S")
-
-    def _get_savepath(self):
-        savepath = os.path.join(self.base_dir, self.time.strftime("%Y%m%d%H%M%S") + ".gif")
-        self.savepath = savepath
-        return savepath
-
-
-    def retrieve_image(self):
-        if not os.path.exists(self.base_dir):
-            os.makedirs(self.base_dir)
-
-        savepath = self._get_savepath()
-        if not os.path.exists(savepath):
-            url = self.get_url()
-            urllib.urlretrieve(url, savepath)
-            print "retrieved ",savepath
-
-        #if not self.image:
-        #    savepath = self._get_savepath()
-        #    self.image = Image.open( savepath )
+            except:
+                print sys.exc_info()
+                pass
+        else:
+            time.sleep(0.3)
 
 def test():
-    d = date(2013,11,10)
 
-    t = time(7,38)
+def test_animation():
+    d = date(2013,11,17)
+
+    t = time(8,36)
     start = datetime.combine(d,t)
     now = start
 
-    t = time(7,39)
+    t = time(9,52)
     end = datetime.combine(d,t)
 
     delta = timedelta(seconds=2)
@@ -59,10 +49,8 @@ def test():
     snapshots = []
     while now < end:
         snapshot = QuakeSnapshot(now)
-        #print snapshot.get_url()
-        #snapshot.retrieve_image()
+        print snapshot.get_url()
         snapshots.append(snapshot)
-
         now += delta
 
     animation.write_animatedgif( snapshots, "hoge.gif" )
