@@ -32,8 +32,6 @@ def watch(tasks,interval_sec=2):
         else:
             time.sleep(0.3)
 
-def test():
-
 def test_animation():
     d = date(2013,11,17)
     t = time(8,36)

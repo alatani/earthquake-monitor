@@ -1,6 +1,7 @@
 import numpy
 import os, os.path
 from PIL import Image
+import urllib
 
 class QuakeSnapshot:
     path = None

@@ -2,11 +2,16 @@ import numpy
 from quakesnapshot import QuakeSnapshot
 from PIL import Image
 
+try:
+    import cPickle as pickle
+except:
+    import pickle
+
 
 class DetectSamplePoints:
     snapshots = None
     pixel_tensor = None
-    def __init__(self,snapshots):
+    def __init__(self,snapshots=None):
         self.snapshots = snapshots
         self.pixel_tensor = self._get_pixel_tensor(snapshots)
 
@@ -18,7 +23,7 @@ class DetectSamplePoints:
     def _transparent_pixel(self,feature):
         return 255 in feature or 10 in feature or 11 in feature
 
-    def cluster_pixels(self):
+    def _cluster_pixels(self):
         tensor = self.pixel_tensor
         duration,width,height = tensor.shape
 
@@ -56,10 +61,21 @@ class DetectSamplePoints:
             equivalents,processed = scan_equivalent_pixels((x,y),processed)
             yield equivalents
 
+    CACHE_FILE = "representative_points.dat"
     def representative_points(self):
-        for cluster in self.cluster_pixels():
-            point = iter(cluster).next()
-            yield point
+        if not self.snapshots:
+            with open(self.CACHE_FILE,"rb") as f:
+                points = pickle.load(f)
+                for point in points:
+                    yield point
+        else:
+            points = []
+            for cluster in self._cluster_pixels():
+                point = iter(cluster).next()
+                yield point
+                points.append(point)
+            with open(self.CACHE_FILE,"wb") as f:
+                pickle.dump(points, f)
 
 
 
@@ -85,8 +101,8 @@ def snapshots():
     return snapshots
 
 
-
 if __name__=="__main__":
     snapshots = snapshots()
     detection = DetectSamplePoints(snapshots)
-    detection.cluster_pixels()
+    points = detection.representative_points()
+    print list(points)
