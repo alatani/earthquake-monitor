@@ -13,7 +13,8 @@ class DetectSamplePoints:
     pixel_tensor = None
     def __init__(self,snapshots=None):
         self.snapshots = snapshots
-        self.pixel_tensor = self._get_pixel_tensor(snapshots)
+        if snapshots:
+            self.pixel_tensor = self._get_pixel_tensor(snapshots)
 
     def _get_pixel_tensor(self,snapshots):
         image_arrays =[ numpy.asarray( ss.image ) for ss in snapshots]
@@ -62,8 +63,8 @@ class DetectSamplePoints:
             yield equivalents
 
     CACHE_FILE = "representative_points.dat"
-    def representative_points(self):
-        if not self.snapshots:
+    def representative_points(self,snapshots=None):
+        if not snapshots:
             with open(self.CACHE_FILE,"rb") as f:
                 points = pickle.load(f)
                 for point in points:

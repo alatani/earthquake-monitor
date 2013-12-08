@@ -1,10 +1,9 @@
 #coding: utf-8
 
-from datetime import datetime, date, time, timedelta
+import datetime
 import urllib
-
 import os, os.path
-
+import sys
 
 import animation#
 
@@ -12,25 +11,31 @@ import animation#
 from quakesnapshot import QuakeSnapshot
 
 def watch(tasks,interval_sec=2):
-    lastupdate = datetime.datetime(2000,1,1)
+    lastupdate = datetime.datetime.combine(datetime.date(2000,1,1),datetime.time(0,0))
+
     sec = datetime.timedelta(seconds=interval_sec)
     while True:
         now = datetime.datetime.now()
         dt = now-lastupdate
         if dt > sec:
+            #try:
+            lastupdate = now
             try:
-                lastupdate = now
                 snapshot = QuakeSnapshot(now)
 
                 #apply snapshot to all tasks
                 for task in tasks:
                     task(snapshot)
+            except IOError as e:
+                print e.message
 
-            except:
-                print sys.exc_info()
-                pass
+
+            #except:
+            #    print sys.exc_info()
+            #    pass
         else:
-            time.sleep(0.3)
+            import time
+            time.sleep(0.2)
 
 def test_animation():
     d = date(2013,11,17)
@@ -53,6 +58,15 @@ def test_animation():
     animation.write_animatedgif( snapshots, "hoge.gif" )
 
 
-test() 
+#test() 
+
+from earthquake_detection import EarthquakeDetector
+detector = EarthquakeDetector()
+def print_score(snapshot):
+    detector(snapshot)
+    print snapshot.timestr, "\t", detector.detector.score
+
+tasks = [print_score]
+watch(tasks)
 
 
