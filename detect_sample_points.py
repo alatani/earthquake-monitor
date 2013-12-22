@@ -1,5 +1,5 @@
 import numpy
-from quakesnapshot import QuakeSnapshot
+from earthquakesnapshot import QuakeSnapshot
 from PIL import Image
 
 try:

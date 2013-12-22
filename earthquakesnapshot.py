@@ -10,7 +10,7 @@ class QuakeSnapshot:
     image = None
     timestr = None
 
-    base_dir = "./snapshot"
+    base_dir = "./repos_snapshots"
     def __init__(self,time):
         delay = 2
 
