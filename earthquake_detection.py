@@ -64,6 +64,10 @@ class EarthquakeSignal:
         for obs in self.earthquake_observers:
             obs.earhquake_finish(snapshot)
 
+    def notifyModelState(self,data):
+        for obs in self.earthquake_observers:
+            obs.update_modelstate(data)
+
 
 
 class TwoStage_EarthquakeDetector():
@@ -85,7 +89,6 @@ class TwoStage_EarthquakeDetector():
         ep=0.05
         et=2500
         self.local_level_model = LocalLevelModel(p,ep,et)
-
 
     def _get_quaking_colors(self,image):
         arr = numpy.asarray(image)
@@ -111,7 +114,10 @@ class TwoStage_EarthquakeDetector():
         self.previous_score = self.score
         self.score = score
 
+        self.signal.notifyModelState((snapshot,self))
+
     def addObserver(self,obs):
         self.signal.addObserver(obs)
+
 
 

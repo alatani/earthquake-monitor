@@ -24,30 +24,33 @@ def test_animation():
     animation.write_animatedgif( snapshots, "hoge.gif" )
 
 
-#test() 
-class PrintScore:
-    from earthquake_detection import TwoStage_EarthquakeDetector
-    detector = TwoStage_EarthquakeDetector()
 
-    def update_snapshot(self,snapshot):
-        self.detector.update_snapshot(snapshot)
-        print snapshot.timestr, "\t", self.detector.score
+class DetectorLogger:
+    def earhquake_emerge(snapshot): pass
+    def earhquake_finish(snapshot): pass
+
+    def update_modelstate(self,data):
+        snapshot,detector = data
+        print snapshot.timestr, "\t", detector.score
 
 
 class GifAnimationConstructor:
     def update_snapshot(self,snapshot):
         pass
 
-    def earhquake_emerge(snapshot):
+    def earhquake_emerge(self,snapshot):
         pass
-    def earhquake_finish(snapshot):
+    def earhquake_finish(self,snapshot):
+        pass
+
+    def update_modelstate(self,data):
+        snapshot,detector = data
         pass
 
 
 if __name__ == "__main__":
     #bootstrap
 
-    print_score = PrintScore()
 
     from earthquake_detection import TwoStage_EarthquakeDetector
     detector = TwoStage_EarthquakeDetector()
@@ -56,12 +59,12 @@ if __name__ == "__main__":
     watcher = PeriodicREMonitorFetcher()
 
     animator = GifAnimationConstructor()
-
-    watcher.addObserver(print_score) #test
+    detectorlogger = DetectorLogger()
 
     watcher.addObserver(detector)
     watcher.addObserver(animator)
     detector.addObserver(animator)
+    detector.addObserver(detectorlogger)
 
     watcher.startFetchingSnapshot()
 
