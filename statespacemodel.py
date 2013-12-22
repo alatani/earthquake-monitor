@@ -27,7 +27,7 @@ class LocalLevelModel:
         epsilon = self.epsilon or epsilon
         eta = self.eta or eta
 
-        self.score = self.score(y)
+        self.score = self.get_score(y)
 
         mean,variance = self._update(y,epsilon,eta)
         return mean,variance
@@ -40,7 +40,7 @@ class LocalLevelModel:
         inner =  - 0.5 * diff * diff / var
         return math.exp(inner) / math.sqrt( 2 * math.pi * var )
 
-    def score(self,x):
+    def get_score(self,x):
         mu = self.mean
         var = self.variance
         diff = x-mu
@@ -51,7 +51,7 @@ class LocalLevelModel:
 def test(xs,p=2500,ep=0.05,et=2500):
     model = LocalLevelModel(p,ep,et)
     for x in xs:
-        yield model.score(x)
+        yield model.get_score(x)
         model.filter(x)
 
 

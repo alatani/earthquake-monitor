@@ -30,7 +30,7 @@ class PrintScore:
     detector = TwoStage_EarthquakeDetector()
 
     def update_snapshot(self,snapshot):
-        self.detector.update(snapshot)
+        self.detector.update_snapshot(snapshot)
         print snapshot.timestr, "\t", self.detector.score
 
 
@@ -52,12 +52,16 @@ if __name__ == "__main__":
     from earthquake_detection import TwoStage_EarthquakeDetector
     detector = TwoStage_EarthquakeDetector()
 
-
     from snapshotfetcher import PeriodicREMonitorFetcher
+    watcher = PeriodicREMonitorFetcher()
 
-    watcher = PeriodicREMonitorFetcher(snapshot_observers)
-    watcher.addObserver(print_score)
+    animator = GifAnimationConstructor()
+
+    watcher.addObserver(print_score) #test
+
     watcher.addObserver(detector)
+    watcher.addObserver(animator)
+    detector.addObserver(animator)
 
     watcher.startFetchingSnapshot()
 

@@ -51,22 +51,22 @@ class IidMultinomialsAnomaryDetection:
 
 #observer pattern
 class EarthquakeSignal:
-    earthquake_observers = []
+    earthquake_observers = set()
 
     def addObserver(self,observer):
-        self.append(observer)
+        self.earthquake_observers.add(observer)
 
     def notifyEeathquakeEmergence(self,snapshot):
-        for obsrever in self.earthquake_observers:
-            observer.earhquake_emerge(snapshot)
+        for obs in self.earthquake_observers:
+            obs.earhquake_emerge(snapshot)
 
     def notifyEeathquakeFinish(self,snapshot):
-        for observer in self.earthquake_observers:
-            observer.earhquake_finish(snapshot)
+        for obs in self.earthquake_observers:
+            obs.earhquake_finish(snapshot)
 
 
 
-class TwoStage_EarthquakeDetector(EarthquakeDetector):
+class TwoStage_EarthquakeDetector():
     signal = EarthquakeSignal()
 
     representative_points = None
