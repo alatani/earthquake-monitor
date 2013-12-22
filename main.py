@@ -26,23 +26,39 @@ def test_animation():
 
 #test() 
 class PrintScore:
-    from earthquake_detection import EarthquakeDetector
-    detector = EarthquakeDetector()
+    from earthquake_detection import TwoStage_EarthquakeDetector
+    detector = TwoStage_EarthquakeDetector()
 
-    def update(self,snapshot):
+    def update_snapshot(self,snapshot):
         self.detector.update(snapshot)
         print snapshot.timestr, "\t", self.detector.score
+
+
+class GifAnimationConstructor:
+    def update_snapshot(self,snapshot):
+        pass
+
+    def earhquake_emerge(snapshot):
+        pass
+    def earhquake_finish(snapshot):
+        pass
 
 
 if __name__ == "__main__":
     #bootstrap
 
     print_score = PrintScore()
-    observers = [print_score]
+
+    from earthquake_detection import TwoStage_EarthquakeDetector
+    detector = TwoStage_EarthquakeDetector()
+
 
     from snapshotfetcher import PeriodicREMonitorFetcher
 
-    watcher = PeriodicREMonitorFetcher(observers)
+    watcher = PeriodicREMonitorFetcher(snapshot_observers)
+    watcher.addObserver(print_score)
+    watcher.addObserver(detector)
+
     watcher.startFetchingSnapshot()
 
 

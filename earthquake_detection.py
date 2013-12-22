@@ -50,13 +50,10 @@ class IidMultinomialsAnomaryDetection:
 
 
 #observer pattern
-class EarthquakeDetector:
+class EarthquakeSignal:
     earthquake_observers = []
 
-    def __init__(self,observers=None):
-        self.earthquake_observers = observers 
-
-    def addObservers(self,observer):
+    def addObserver(self,observer):
         self.append(observer)
 
     def notifyEeathquakeEmergence(self,snapshot):
@@ -70,12 +67,12 @@ class EarthquakeDetector:
 
 
 class TwoStage_EarthquakeDetector(EarthquakeDetector):
-    representative_points = None
+    signal = EarthquakeSignal()
 
+    representative_points = None
     local_level_model = None
 
     threshold = 20000
-
     score = 0
     previous_score = 0
 
@@ -95,7 +92,7 @@ class TwoStage_EarthquakeDetector(EarthquakeDetector):
         feature = [ arr[x,y] for x,y in self.representative_points]
         return feature
 
-    def update(self,snapshot):
+    def update_snapshot(self,snapshot):
         image = snapshot.image
         feature = self._get_quaking_colors(image)
 
@@ -107,12 +104,14 @@ class TwoStage_EarthquakeDetector(EarthquakeDetector):
 
         if score > self.threshold and self.previous_score <= self.threshold:
             #earthquake!
-            self.notifyEarthquakeEmerge(snapshot)
+            self.signal.notifyEarthquakeEmerge(snapshot)
         if score <= self.threshold and self.previous_score > self.threshold:
-            self.notifyEarthquakeFinish(snapshot)
+            self.signal.notifyEarthquakeFinish(snapshot)
 
         self.previous_score = self.score
         self.score = score
 
+    def addObserver(self,obs):
+        self.signal.addObserver(obs)
 
 

@@ -8,26 +8,30 @@ import animation#
 from earthquakesnapshot import QuakeSnapshot
 
 #observer pattern
-class SnapshotWatcher:
-    observers = []
+class SnapshotSignal:
+    observers = set()
 
     def __init__(self,observers=None):
-        self.observers = observers 
+      for obs in observers:
+        self.observers.add(obs)
 
-    def addObservers(self,observer):
-        self.append(observer)
+    def addObserver(self,observer):
+        self.add(observer)
 
-    def notifyObservers(self,snapshot):
+    def notifySnapshot(self,snapshot):
         for obsrever in self.observers:
-            observer.update(snapshot)
+            observer.update_snapshot(snapshot)
 
-    def startWatchingSnapshot(self):
-        pass
 
-class PeriodicREMonitorWatcher(SnapshotWatcher):
 
-    def startWatchingSnapshot(self):
+class PeriodicREMonitorFetcher():
+    signal = SnapshotSignal()
+    
+    def startFetchingSnapshot(self):
         self.watch()
+
+    def addObserver(self,obs):
+        self.signal.addObserver(obs)
 
     def watch(interval_sec=2):
         lastupdate = datetime.datetime.combine(datetime.date(2000,1,1),datetime.time(0,0))
@@ -42,12 +46,13 @@ class PeriodicREMonitorWatcher(SnapshotWatcher):
                 try:
                     snapshot = QuakeSnapshot(now)
                     #notify snapshot to all observers
-                    self.notifyObservers(snapshot)
+                    self.signal.notifySnapshot(snapshot)
                 except IOError as e:
                     print e.message
             else:
                 import time
                 time.sleep(0.2)
+
 
 
 
