@@ -26,8 +26,8 @@ def test_animation():
 
 
 class DetectorLogger:
-    def earhquake_emerge(snapshot): pass
-    def earhquake_finish(snapshot): pass
+    def earhquake_emerge(self,snapshot): pass
+    def earhquake_finish(self,snapshot): pass
 
     def update_modelstate(self,data):
         snapshot,detector = data

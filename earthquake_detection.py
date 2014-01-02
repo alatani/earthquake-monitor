@@ -76,7 +76,7 @@ class TwoStage_EarthquakeDetector():
     representative_points = None
     local_level_model = None
 
-    threshold = 20000
+    threshold = 3000
     score = 0
     previous_score = 0
 
@@ -107,7 +107,8 @@ class TwoStage_EarthquakeDetector():
 
         if score > self.threshold and self.previous_score <= self.threshold:
             #earthquake!
-            self.signal.notifyEarthquakeEmerge(snapshot)
+            self.signal.notifyEeathquakeEmergence(snapshot)
+
         if score <= self.threshold and self.previous_score > self.threshold:
             self.signal.notifyEarthquakeFinish(snapshot)
 
