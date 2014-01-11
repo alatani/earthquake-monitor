@@ -56,11 +56,11 @@ class EarthquakeSignal:
     def addObserver(self,observer):
         self.earthquake_observers.add(observer)
 
-    def notifyEeathquakeEmergence(self,snapshot):
+    def notifyEarthquakeEmergence(self,snapshot):
         for obs in self.earthquake_observers:
             obs.earhquake_emerge(snapshot)
 
-    def notifyEeathquakeFinish(self,snapshot):
+    def notifyEarthquakeFinish(self,snapshot):
         for obs in self.earthquake_observers:
             obs.earhquake_finish(snapshot)
 
@@ -76,7 +76,7 @@ class TwoStage_EarthquakeDetector():
     representative_points = None
     local_level_model = None
 
-    threshold = 3000
+    threshold = 3500
     score = 0
     previous_score = 0
 
@@ -107,7 +107,7 @@ class TwoStage_EarthquakeDetector():
 
         if score > self.threshold and self.previous_score <= self.threshold:
             #earthquake!
-            self.signal.notifyEeathquakeEmergence(snapshot)
+            self.signal.notifyEarthquakeEmergence(snapshot)
 
         if score <= self.threshold and self.previous_score > self.threshold:
             self.signal.notifyEarthquakeFinish(snapshot)
