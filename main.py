@@ -1,3 +1,4 @@
+#coding: utf-8
 from earthquakesnapshot import QuakeSnapshot
 
 def test_animation():
