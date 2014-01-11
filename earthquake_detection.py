@@ -58,11 +58,11 @@ class EarthquakeSignal:
 
     def notifyEarthquakeEmergence(self,snapshot):
         for obs in self.earthquake_observers:
-            obs.earhquake_emerge(snapshot)
+            obs.earhquake_emerged(snapshot)
 
     def notifyEarthquakeFinish(self,snapshot):
         for obs in self.earthquake_observers:
-            obs.earhquake_finish(snapshot)
+            obs.earhquake_finished(snapshot)
 
     def notifyModelState(self,data):
         for obs in self.earthquake_observers:
@@ -109,7 +109,7 @@ class TwoStage_EarthquakeDetector():
             #earthquake!
             self.signal.notifyEarthquakeEmergence(snapshot)
 
-        if score <= self.threshold and self.previous_score > self.threshold:
+        elif score <= self.threshold and self.previous_score > self.threshold:
             self.signal.notifyEarthquakeFinish(snapshot)
 
         self.previous_score = self.score

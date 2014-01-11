@@ -26,21 +26,53 @@ def test_animation():
 
 
 class DetectorLogger:
-    def earhquake_emerge(self,snapshot): pass
-    def earhquake_finish(self,snapshot): pass
+    def earhquake_emerged(self,snapshot): 
+        print "::Emerged!"
+    def earhquake_finished(self,snapshot): 
+        print "::Finished!"
 
     def update_modelstate(self,data):
         snapshot,detector = data
         print snapshot.timestr, "\t", detector.score
 
 
+class TwitterBot:
+    def __init__(self):
+        import twitterbot
+        import datetime
+
+        self.twitter = twitterbot.Twitter("alatani")
+        self.lastupdate = datetime.datetime.fromtimestamp(0)
+
+        self.interval = datetime.timedelta(seconds=60)
+
+    def earhquake_emerged(self,snapshot): 
+        import datetime
+
+        now = datetime.datetime.now()
+        if now > self.lastupdate + self.interval:
+            print now
+            timestr = now.strftime("%Y/%m/%d %H:%M:%S")
+            message = "【自動】 ゆれ(?)  : " + timestr
+            self.lastupdate = now
+            self.twitter.post(message)
+
+
+    def earhquake_finished(self,snapshot): 
+
+        pass
+
+    def update_modelstate(self,data):
+        pass
+
+
 class GifAnimationConstructor:
     def update_snapshot(self,snapshot):
         pass
 
-    def earhquake_emerge(self,snapshot):
+    def earhquake_emerged(self,snapshot):
         pass
-    def earhquake_finish(self,snapshot):
+    def earhquake_finished(self,snapshot):
         pass
 
     def update_modelstate(self,data):
@@ -60,11 +92,13 @@ if __name__ == "__main__":
 
     animator = GifAnimationConstructor()
     detectorlogger = DetectorLogger()
+    twitterbot = TwitterBot()
 
     watcher.addObserver(detector)
     watcher.addObserver(animator)
     detector.addObserver(animator)
     detector.addObserver(detectorlogger)
+    detector.addObserver(twitterbot)
 
     watcher.startFetchingSnapshot()
 
