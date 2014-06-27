@@ -47,3 +47,6 @@ snapshot/
 *.dat
 *.swn
 *.log
+
+
+scores.txt

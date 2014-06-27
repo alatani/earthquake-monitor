@@ -1,4 +1,7 @@
+Requirements
+--------------
 
-** Installation
-$ easy_install pillow
-$ easy_install images2gif 
+```sh
+$ pip install pillow           
+$ pip install images2gif    
+```
